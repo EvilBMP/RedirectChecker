@@ -4,25 +4,39 @@ namespace GorkaLaucirica\RedirectChecker\Infrastructure\Ui\Cli\Symfony;
 
 use GorkaLaucirica\RedirectChecker\Application\Query\CheckRedirectionHandler;
 use GorkaLaucirica\RedirectChecker\Application\Query\CheckRedirectionQuery;
-use GorkaLaucirica\RedirectChecker\Infrastructure\RedirectTraceProvider\Guzzle;
 use GorkaLaucirica\RedirectChecker\Infrastructure\Loader\Yaml;
+use GorkaLaucirica\RedirectChecker\Infrastructure\RedirectTraceProvider\Guzzle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class CheckRedirectionFromYamlCommand
+ *
+ * @package GorkaLaucirica\RedirectChecker\Infrastructure\Ui\Cli\Symfony
+ */
 final class CheckRedirectionFromYamlCommand extends Command
 {
+
+    /**
+     * Configures the current command.
+     */
     protected function configure()
     {
         $this->setName('yaml')
-            ->setDescription('Executes the URL redirects tests in the given YAML file')
-            ->addArgument('filepath', InputArgument::REQUIRED, 'The path to the YAML file.')
-            ->addOption('base-url', null, InputOption::VALUE_OPTIONAL, 'The base URL for non-absolute redirects.');
+             ->setDescription('Executes the URL redirects tests in the given YAML file')
+             ->addArgument('filepath', InputArgument::REQUIRED, 'The path to the YAML file.')
+             ->addOption('base-url', null, InputOption::VALUE_OPTIONAL, 'The base URL for non-absolute redirects.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $checkRedirectionHandler = new CheckRedirectionHandler(new Guzzle());
 
@@ -65,15 +79,21 @@ final class CheckRedirectionFromYamlCommand extends Command
                     $fails
                 )
             );
-
-            return $fails > 0 ? -1 : 0;
         } catch (\Exception $e) {
             $output->writeln(
                 '<error>' . $e->getMessage() . '</error>'
             );
         }
+
+        return $fails > 0 ? Command::FAILURE : Command::SUCCESS;
     }
 
+    /**
+     * @param array $redirection
+     * @param string $origin
+     * @param string $destination
+     * @return string
+     */
     private function renderResultLine(array $redirection, string $origin, string $destination): string
     {
         $isValid = $redirection['isValid'];
@@ -94,7 +114,11 @@ final class CheckRedirectionFromYamlCommand extends Command
         );
     }
 
-    private function renderTraceItemLine(array $traceItem) : string
+    /**
+     * @param array $traceItem
+     * @return string
+     */
+    private function renderTraceItemLine(array $traceItem): string
     {
         return sprintf('├── [%d] %s', $traceItem['statusCode'], $traceItem['uri']);
     }

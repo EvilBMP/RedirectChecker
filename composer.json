@@ -4,18 +4,20 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": "^7.0",
-        "guzzlehttp/guzzle": "^6.3",
-        "symfony/console": "^2.8 || ^3.0",
-        "symfony/yaml": "^2.8 || ^3.0"
+        "php": "^7.2",
+        "guzzlehttp/guzzle": "^7.3",
+        "symfony/console": "^5.0",
+        "symfony/yaml": "^5.0"
     },
     "require-dev": {
-        "phpspec/phpspec": "^3.4"
+        "phpspec/phpspec": "^7.0"
     },
     "autoload": {
         "psr-4": {
             "GorkaLaucirica\\RedirectChecker\\": "src/GorkaLaucirica/RedirectChecker"
         }
     },
-    "bin": ["bin/redirect-checker"]
+    "bin": [
+        "bin/redirect-checker"
+    ]
 }
