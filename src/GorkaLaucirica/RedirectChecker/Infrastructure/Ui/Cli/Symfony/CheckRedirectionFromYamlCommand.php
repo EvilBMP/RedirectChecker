@@ -85,7 +85,7 @@ final class CheckRedirectionFromYamlCommand extends Command
             );
         }
 
-        return $fails > 0 ? Command::FAILURE : Command::SUCCESS;
+        return $fails > 0 ? 1 : 0;
     }
 
     /**
